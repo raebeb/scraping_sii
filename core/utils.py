@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-from lxml import html
+
 from .rut import rut_to_dict
 
 def scrap_html(url):
@@ -46,3 +46,13 @@ def login_to_sii(rut, password):
 
 def connect_to_page(url, session):
     return session.get(url)
+
+
+# python manage.py shell
+# from core.utils import *
+# response_login = login_to_sii('782413708', 'union2')
+# Login successful
+# resp = connect_to_page('https://www.sii.cl/servicios_online/', response_login)
+# soup = BeautifulSoup(resp.text, 'html.parser')
+# title = soup.find('h1')
+# title
