@@ -1,53 +1,32 @@
-from bs4 import BeautifulSoup
+import uuid
 import requests
 
-from .rut import rut_to_dict
+from core.sii_user import SiiUser
+from core.rut import rut_to_dict
 
-class SiiUser:
-    def __init__(self, rut, password):
-        self.rut = rut
-        self.password = password
-        self.session = self.login(self.rut, self.password)
-        self.cookies = requests.utils.dict_from_cookiejar(self.session.cookies)
-        self.token = self.cookies['TOKEN']
+def create_UUID():
+    return str(uuid.uuid4())
 
-
-    def create_data_for_login(self, rut, password):
-        data = rut_to_dict(rut)
-
-        return {
-            'rut': data["rut"],
-            'dv': data["dv"],
-            'referencia': 'https://misiir.sii.cl/cgi_misii/siihome.cgi',
-            '411': '',
-            'rutcntr': data["rutcntr"],
-            'clave': password,
+def download_buying_book(sii_user: SiiUser, year: int, month: int, operation: str):
+    url = 'https://www4.sii.cl/consdcvinternetui/services/data/facadeService/getResumen'
+    payload = {
+        "metaData": {
+            "namespace": "cl.sii.sdi.lob.diii.consdcv.data.api.interfaces.FacadeService/getResumen",
+            "conversationId": sii_user.token,
+            "transactionId": create_UUID(),
+            "page": None
+        },
+        'data': {
+            "rutEmisor": rut_to_dict(sii_user.rut)['rut'],
+            "dvEmisor": rut_to_dict(sii_user.rut)['dv'],
+            "ptributario": f'{year}{month}',
+            "estadoContab": "REGISTRO",
+            "operacion": operation,
+            "busquedaInicial": True
+    
         }
-
-    def login(self, rut, password):
-        session_requests = requests.Session()
-
-        data = self.create_data_for_login(rut, password)
-        response = session_requests.post('https://zeusr.sii.cl/cgi_AUT2000/CAutInicio.cgi', data=data)
-
-        soup = BeautifulSoup(response.text, 'html.parser')
-        if soup.find(id="auth_bottom"):
-            print("Login unsuccessful")
-            return False
-        print("Login successful")
-
-        return session_requests
-
-    def connect_to_page(self, url: str, session: requests.Session):
-        if session:
-            return session.get(url)
-        return False
-
-
-# python manage.py shell
-# from core.utils import *
-# response_login = login_to_sii('782413708', 'union2')
-# resp = connect_to_page('https://www4.sii.cl/consdcvinternetui/', response_login)
-# soup = BeautifulSoup(resp.text, 'html.parser')
-# title = soup.find('h1')
-# title
+    }
+    print(f'PAYLOAD ---> {payload}')
+    
+    response = sii_user.session.post(url, data=payload)
+    return response
