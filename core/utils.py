@@ -1,10 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
-
 from .rut import rut_to_dict
 
-def scrap_html(url):
-    request = requests.get(url)
+def scrap_html(request):
     return BeautifulSoup(request.text, 'html.parser')
 
 
@@ -26,15 +24,11 @@ def login_to_sii(rut, password):
     headers = {
         'Origin': 'https://zeusr.sii.cl',
         'Referer': 'https://zeusr.sii.cl//AUT2000/InicioAutenticacion/IngresoRutClave.html?https://misiir.sii.cl/cgi_misii/siihome.cgi',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
-        'sec-ch-ua': '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Linux"',
+        'Upgrade-Insecure-Requests': '1'
     }
 
     data = create_data_for_login(rut, password)
-    response = session_requests.post('https://zeusr.sii.cl/cgi_AUT2000/CAutInicio.cgi', headers, data)
+    response = session_requests.post('https://zeusr.sii.cl/cgi_AUT2000/CAutInicio.cgi', headers=headers, data=data)
     
     soup = BeautifulSoup(response.text, 'html.parser')
     if soup.find(id="auth_bottom"):
@@ -51,8 +45,7 @@ def connect_to_page(url, session):
 # python manage.py shell
 # from core.utils import *
 # response_login = login_to_sii('782413708', 'union2')
-# Login successful
-# resp = connect_to_page('https://www.sii.cl/servicios_online/', response_login)
+# resp = connect_to_page('https://www4.sii.cl/consdcvinternetui/#/index', response_login)
 # soup = BeautifulSoup(resp.text, 'html.parser')
 # title = soup.find('h1')
 # title
