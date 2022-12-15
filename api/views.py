@@ -11,5 +11,6 @@ class ClientViewSet(viewsets.ViewSet):
 
     def retrieve(self, request):
         client = '' #TODO get client from scraped data
+        #TODO: 1 -> Create the client, 2 -> with the client created get the data from sii_scraper
         serializer = ClientSerializer(client)
         return Response(serializer.data)
