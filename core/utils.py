@@ -1,5 +1,6 @@
 import uuid
 import requests
+import json
 
 from core.sii_user import SiiUser
 from core.rut import rut_to_dict
@@ -26,7 +27,8 @@ def download_buying_book(sii_user: SiiUser, year: int, month: int, operation: st
     
         }
     }
-    print(f'PAYLOAD ---> {payload}')
+    json_payload = json.dumps(payload)
+    print(f'PAYLOAD ---> {json_payload}')
     
-    response = sii_user.session.post(url, data=payload)
+    response = sii_user.session.post(url, data=json_payload)
     return response
