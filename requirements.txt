@@ -12,11 +12,15 @@ cryptography==38.0.4
 cssselect==1.2.0
 Django==4.1.4
 django-extensions==3.2.1
+django-rest-swagger==2.2.0
 djangorestframework==3.14.0
+drf-yasg==1.21.4
 filelock==3.8.2
+gunicorn==20.1.0
 hyperlink==21.0.0
 idna==3.4
 incremental==22.10.0
+inflection==0.5.1
 itemadapter==0.7.0
 itemloaders==1.0.6
 itypes==1.2.0
@@ -37,6 +41,8 @@ pytz==2022.6
 queuelib==1.6.2
 requests==2.28.1
 requests-file==1.5.1
+ruamel.yaml==0.17.21
+ruamel.yaml.clib==0.2.7
 rut-chile==2.0.1
 Scrapy==2.7.1
 service-identity==21.1.0
