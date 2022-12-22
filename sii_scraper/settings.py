@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django_extensions',
-    'rest_framework',# required for serving swagger ui's css/js files
+    'rest_framework',  # required for serving swagger ui's css/js files
     'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',

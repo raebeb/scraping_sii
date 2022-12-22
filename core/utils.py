@@ -26,16 +26,17 @@ def get_company_data(sii_user: SiiUser) -> dict:
         dict: Body requested by frontend
     """
 
-    response = sii_user.session.get("https://misiir.sii.cl/cgi_misii/siihome.cgi#")
+    response = sii_user.session.get(
+        "https://misiir.sii.cl/cgi_misii/siihome.cgi#")
     soup = BeautifulSoup(response.content, "html.parser")
 
-    ### Here we extract the data from the script tag
+    # Here we extract the data from the script tag
     scripts = soup.find_all("script")
     for script in scripts:
         if "DatosCntrNow" in script.text:
             contributor_data = script
 
-    ### Here we delete all the white spaces and the variables names
+    # Here we delete all the white spaces and the variables names
     clean_data = (
         contributor_data.text.replace("\t", "")
         .replace("\r", "")
@@ -46,10 +47,10 @@ def get_company_data(sii_user: SiiUser) -> dict:
         .replace("DatosActeco", "")
     )
 
-    ### Here we split the data in a list of strings
+    # Here we split the data in a list of strings
     data_without_name_variables = clean_data.split("=")
 
-    ### Here we set the data to the variables
+    # Here we set the data to the variables
     # Im using the same variable name that is used in the SII but im don't have idea what tf they mean
     datos_cntr_now = json.loads(data_without_name_variables[1])
     datos_cntr_aler = json.loads(data_without_name_variables[2])
