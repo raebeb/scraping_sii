@@ -55,7 +55,6 @@ def get_company_data(sii_user: SiiUser) -> dict:
     datos_cntr_aler = json.loads(data_without_name_variables[2])
     datos_acteco = json.loads(data_without_name_variables[3])
 
-
     # Get data for legal representative
     data = {
         "opc": "112",
@@ -74,31 +73,34 @@ def get_company_data(sii_user: SiiUser) -> dict:
 
     # Get data for active economic activities
     data = {
-        'year': '',
-        'opc': '21',
-        'VIEW': '1',
+        "year": "",
+        "opc": "21",
+        "VIEW": "1",
     }
     response = sii_user.session.post(
         "https://misiir.sii.cl/cgi_misii/CViewCarta.cgi",
         cookies=sii_user.cookies,
-        data=data
+        data=data,
     )
 
     json_response = json.loads(response.content.decode("utf-8"))
-    activities = json_response['listHistoricoGiros']
+    activities = json_response["listHistoricoGiros"]
     # print(f"RESPONSE ? -----> {json.dumps(json_response)}")
 
     # Get data for caracteristics
-    characteristics = datos_cntr_now['atributos']
-
+    characteristics = datos_cntr_now["atributos"]
 
     soup = BeautifulSoup(response.content, "html.parser")
 
     user_data = {
         "legal_representative": [
-            {"name": f"{representative['nombres']} {representative['apellidoPaterno']} {representative['apellidoMaterno']}",
-            "rut": f"{representative['rut']}-{representative['dv']}",
-            "from_date": representative['fechaInicio']} for representative in legal_representatives], 
+            {
+                "name": f"{representative['nombres']} {representative['apellidoPaterno']} {representative['apellidoMaterno']}",
+                "rut": f"{representative['rut']}-{representative['dv']}",
+                "from_date": representative["fechaInicio"],
+            }
+            for representative in legal_representatives
+        ],
         "constitution_date": datos_cntr_now["contribuyente"]["fechaConstitucion"],
         "start_of_activities": datos_cntr_now["contribuyente"][
             "fechaInicioActividades"
@@ -108,27 +110,30 @@ def get_company_data(sii_user: SiiUser) -> dict:
             {
                 "name": f"{partner['nombres']} {partner['apellidoPaterno']} {partner['apellidoMaterno']}",
                 "rut": f"{partner['rut']}-{partner['dv']}",
-                "aware_capital": int(partner['aporteEnterado']),
-                "capital_to_find_out": int(partner['aportePorEnterar']),
-                "capital_percentage": float(partner['participacionCapital']),
-                "percentage_utilities": float(partner['participacionUtilidades']),
-                "membership_from": partner['fechaIncorporacion'],
-            } for partner in current_partners
+                "aware_capital": int(partner["aporteEnterado"]),
+                "capital_to_find_out": int(partner["aportePorEnterar"]),
+                "capital_percentage": float(partner["participacionCapital"]),
+                "percentage_utilities": float(partner["participacionUtilidades"]),
+                "membership_from": partner["fechaIncorporacion"],
+            }
+            for partner in current_partners
         ],
         "active_economic_activities": [
             {
-                "code": activity['tacnCodigo'],
-                "name": activity['tacnDesc'],
-                "category": int(activity['categoriaTributaria']),
-                "taxable": False if activity['afectaIva']=='N' else True,
-                "start_at": activity['fechaInicio'],
-            } for activity in activities
+                "code": activity["tacnCodigo"],
+                "name": activity["tacnDesc"],
+                "category": int(activity["categoriaTributaria"]),
+                "taxable": False if activity["afectaIva"] == "N" else True,
+                "start_at": activity["fechaInicio"],
+            }
+            for activity in activities
         ],
         "characteristics": [
             {
-                "start_at": characteristic['fechaInicio'],
-                "description" : characteristic['descAtrCodigo'],
-            } for characteristic in characteristics
+                "start_at": characteristic["fechaInicio"],
+                "description": characteristic["descAtrCodigo"],
+            }
+            for characteristic in characteristics
         ],
     }
     return user_data

@@ -17,7 +17,22 @@ class SIIDataViewSet(viewsets.ViewSet):
         queryset = ""
         return queryset
 
-    @swagger_auto_schema(method="get",operation_description="Get personal and tax data from SII", responses={200: CompanySerializer, 400: "Invalid credentials"}, manual_parameters=[openapi.Parameter('rut', openapi.IN_QUERY, description="RUT", type=openapi.TYPE_STRING), openapi.Parameter('password', openapi.IN_QUERY, description="Password", type=openapi.TYPE_STRING)])
+    @swagger_auto_schema(
+        method="get",
+        operation_description="Get personal and tax data from SII",
+        responses={200: CompanySerializer, 400: "Invalid credentials"},
+        manual_parameters=[
+            openapi.Parameter(
+                "rut", openapi.IN_QUERY, description="RUT", type=openapi.TYPE_STRING
+            ),
+            openapi.Parameter(
+                "password",
+                openapi.IN_QUERY,
+                description="Password",
+                type=openapi.TYPE_STRING,
+            ),
+        ],
+    )
     @action(detail=False, methods=["get"])
     def personal_and_tax_data(self, request):
         query_params = request.query_params
