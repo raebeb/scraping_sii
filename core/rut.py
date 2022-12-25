@@ -2,7 +2,7 @@ from rut_chile import rut_chile
 
 
 def validate_rut(rut: str) -> bool:
-    return rut_chile.is_valid(rut)
+    return rut_chile.is_valid_rut(rut)
 
 
 def rut_to_dict(rut: str) -> dict:
