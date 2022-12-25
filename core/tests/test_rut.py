@@ -2,6 +2,7 @@ import unittest
 
 from core.rut import validate_rut, rut_to_dict
 
+
 class TestRut(unittest.TestCase):
     def setUp(self) -> None:
         self.rut = "11.111.111-1"
