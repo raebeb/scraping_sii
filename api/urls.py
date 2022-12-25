@@ -3,8 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import SIIDataViewSet
 
 router = DefaultRouter()
-router.register(r'', SIIDataViewSet, basename='')
+router.register(r"", SIIDataViewSet, basename="")
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]
