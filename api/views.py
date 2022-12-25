@@ -20,11 +20,15 @@ class SIIDataViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         method="get",
         operation_description="Get personal and tax data from SII",
-        responses={200: CompanySerializer, 400: "Invalid credentials"},
+        responses={
+            200: CompanySerializer,
+            400: "Invalid credentials"},
         manual_parameters=[
             openapi.Parameter(
-                "rut", openapi.IN_QUERY, description="RUT", type=openapi.TYPE_STRING
-            ),
+                "rut",
+                openapi.IN_QUERY,
+                description="RUT",
+                type=openapi.TYPE_STRING),
             openapi.Parameter(
                 "password",
                 openapi.IN_QUERY,
